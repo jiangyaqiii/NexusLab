@@ -171,7 +171,7 @@ start_prover() {
 
     cd "$NEXUS_HOME" || exit
 
-    echo "$input_id" > "$PROVER_ID_FILE"
+    echo "$proverId" > "$PROVER_ID_FILE"
 
     tmux new-session -d -s "$SESSION_NAME" "cd '$NEXUS_HOME' && ./prover beta.orchestrator.nexus.xyz"
     echo -e "${GREEN}Prover 已启动，选择2可查看运行日志${NC}"
