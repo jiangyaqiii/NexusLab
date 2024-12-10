@@ -4,7 +4,8 @@
 curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_status.sh |bash
 
 # 启动服务
-export proverId
+
+#export proverId
 
 wget -O nexuslab_docker.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_docker.sh && chmod +x nexuslab_docker.sh && ./nexuslab_docker.sh
 
