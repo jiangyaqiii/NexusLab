@@ -74,6 +74,7 @@ generate_prover_id() {
     if [ -n "$proverId" ]; then
         echo "$proverId" > "$PROVER_ID_FILE"
         echo -e "${GREEN}已生成并保存新的 Prover ID: $proverId${NC}"
+    fi
 }
 
 start_prover() {
