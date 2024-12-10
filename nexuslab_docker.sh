@@ -33,5 +33,5 @@ if [[ $(docker ps -qf name=nexuslab-contain) ]]; then
 fi
 echo ''
 echo '启动新容器'
-docker run -d --name nexuslab-contain -e PATH="/root/.local/bin:$PATH" -e proverId="$proverId" -w /root ubuntu:22.04 /bin/bash -c " apt-get update && apt-get install -y wget && wget -O nexuslab_start.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_start.sh && chmod +x nexuslab_start.sh &&./nexuslab_start.sh"
+docker run -d --name nexuslab-contain -e PATH="/root/.local/bin:$PATH" -w /root ubuntu:22.04 /bin/bash -c " apt-get update && apt-get install -y wget && wget -O nexuslab_start.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_start.sh && chmod +x nexuslab_start.sh &&./nexuslab_start.sh"
 rm -f nexuslab_docker.sh
