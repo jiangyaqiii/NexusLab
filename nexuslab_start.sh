@@ -57,9 +57,31 @@ download_files() {
     download_program_files
 }
 
+generate_prover_id() {
+    "./prover" beta.orchestrator.nexus.xyz > tmp.txt 2>&1 &
+    prover_pid=$!
+    # 等待直到看到成功连接的消息
+    while ! grep -q "Success! Connection complete!" tmp.txt 2>/dev/null; do
+        if ! kill -0 $prover_pid 2>/dev/null; then
+            break
+        fi
+        sleep 1
+    done
+
+    kill $prover_pid 2>/dev/null
+
+    proverId=$(grep -o 'Your current prover identifier is [^ ]*' tmp.txt | cut -d' ' -f6)
+    if [ -n "$proverId" ]; then
+        echo "$proverId" > "$PROVER_ID_FILE"
+        echo -e "${GREEN}已生成并保存新的 Prover ID: $proverId${NC}"
+    
+    rm tmp.txt
+}
+
 start_prover() {
     cd "$NEXUS_HOME"
-    echo "$proverId" > "$PROVER_ID_FILE"
+    generate_prover_id
+    # echo "$proverId" > "$PROVER_ID_FILE"
     ./prover beta.orchestrator.nexus.xyz
 }
 
