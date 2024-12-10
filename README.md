@@ -6,7 +6,7 @@ curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_sta
 # 启动服务
 export proverId
 
-wget -O nexuslab_start.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_start.sh && chmod +x nexuslab_start.sh && ./nexuslab_start.sh
+wget -O nexuslab_docker.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_docker.sh && chmod +x nexuslab_docker.sh && ./nexuslab_docker.sh
 
 # 查看proverId
 curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/look_proverid.sh |bash
