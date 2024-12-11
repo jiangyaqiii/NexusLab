@@ -12,5 +12,9 @@ wget -O nexuslab_docker.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLa
 # 查看proverId
 curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/look_proverid.sh |bash
 
+
+# 重启（自带proverId）
+curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_docker_restart.sh |bash
+
 # 容器内重启（自带proverId）
 curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_restart.sh |bash
