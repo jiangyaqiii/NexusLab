@@ -141,6 +141,7 @@ start_network() {
     cd "$NEXUS_HOME/network-api/clients/cli" || exit
 
     tmux new-session -d -s "$SESSION_NAME" "cd '$NEXUS_HOME/network-api/clients/cli' && ./nexus-network --start --beta"
+    # ./nexus-network --start --beta
     echo -e "${GREEN}Network已启动，选择3可查看运行日志${NC}"
 }
 
