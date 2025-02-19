@@ -74,7 +74,7 @@ setup_directories() {
         mkdir -p "$NEXUS_HOME"
     fi
 
-    if [ ! -d "$NEXUS_HOME/NEXUS" ]; then
+    if [ ! -d "$NEXUS_HOME/network-api" ]; then
         echo -e "${YELLOW}克隆NEXUS仓库...${NC}"
         cd "$NEXUS_HOME"
         git clone https://github.com/nexus-xyz/network-api.git
@@ -104,8 +104,8 @@ check_system_compatibility() {
 }
 
 download_binary() {
-    local binary_path="$NEXUS_HOME/NEXUS/clients/cli/nexus-network"
-    local example_path="$NEXUS_HOME/NEXUS/clients/cli/example"
+    local binary_path="$NEXUS_HOME/network-api/clients/cli/nexus-network"
+    local example_path="$NEXUS_HOME/network-api/clients/cli/example"
     
     if [ ! -f "$binary_path" ]; then
         echo -e "${YELLOW}下载主程序...${NC}"
@@ -138,9 +138,9 @@ start_network() {
         return
     fi
 
-    cd "$NEXUS_HOME/NEXUS/clients/cli" || exit
+    cd "$NEXUS_HOME/network-api/clients/cli" || exit
 
-    tmux new-session -d -s "$SESSION_NAME" "cd '$NEXUS_HOME/NEXUS/clients/cli' && ./nexus-network --start --beta"
+    tmux new-session -d -s "$SESSION_NAME" "cd '$NEXUS_HOME/network-api/clients/cli' && ./nexus-network --start --beta"
     echo -e "${GREEN}Network已启动，选择3可查看运行日志${NC}"
 }
 
@@ -188,11 +188,11 @@ update_nexus() {
 
     stop_network
 
-    cd "$NEXUS_HOME/NEXUS"
+    cd "$NEXUS_HOME/network-api"
     git pull
 
-    rm -f "$NEXUS_HOME/NEXUS/clients/cli/nexus-network"
-    rm -f "$NEXUS_HOME/NEXUS/clients/cli/example"
+    rm -f "$NEXUS_HOME/network-api/clients/cli/nexus-network"
+    rm -f "$NEXUS_HOME/network-api/clients/cli/example"
     download_binary
 
     echo -e "${GREEN}更新完成！正在启动 Network...${NC}"
@@ -232,7 +232,7 @@ while true; do
             install_network
             ;;
         2)
-            if [ ! -f "$NEXUS_HOME/NEXUS/clients/cli/nexus-network" ]; then
+            if [ ! -f "$NEXUS_HOME/network-api/clients/cli/nexus-network" ]; then
                 echo -e "${RED}请先安装 Network（选项1）${NC}"
             else
                 if [ ! -f "$NODE_ID_FILE" ]; then
