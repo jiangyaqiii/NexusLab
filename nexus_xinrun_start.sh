@@ -20,7 +20,7 @@ source ~/.bashrc
 apt install -y screen
 
 set_node_id() {
-    read -p "请输入新的 Node ID: " new_id
+    # read -p "请输入新的 Node ID: " new_id
     if [ -n "$new_id" ]; then
         echo "$new_id" > "$NODE_ID_FILE"
         echo -e "${GREEN}Node ID 已更新${NC}"
@@ -37,5 +37,5 @@ export PATH="$HOME/.cargo/bin:$PATH"
 source ~/.bashrc
 set_node_id
 
-screen -d -m -S nexus bash -c "https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_status.sh | sh"
+screen -d -m -S nexus bash -c "curl https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/beta.sh | sh"
 
