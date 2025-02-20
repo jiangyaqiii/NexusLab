@@ -37,5 +37,5 @@ export PATH="$HOME/.cargo/bin:$PATH"
 source ~/.bashrc
 set_node_id
 
-screen -d -m -S nexus bash -c "curl https://cli.nexus.xyz/ | sh -s -- -y"
+screen -d -m -S nexus bash -c "https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_status.sh | sh"
 
