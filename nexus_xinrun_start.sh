@@ -33,7 +33,7 @@ setup_directories() {
         echo -e "${YELLOW}创建 $NEXUS_HOME 目录...${NC}"
         mkdir -p "$NEXUS_HOME"
     fi
-
+}
 sudo apt update -y && sudo apt upgrade -y
 sudo apt install -y build-essential pkg-config libssl-dev git-all
 sudo apt install -y protobuf-compiler
