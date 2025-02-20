@@ -29,7 +29,7 @@ set_node_id() {
     fi
 }
 
-sudo apt update && sudo apt upgrade
+sudo apt update -y && sudo apt upgrade -y
 sudo apt install -y build-essential pkg-config libssl-dev git-all
 sudo apt install -y protobuf-compiler
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
