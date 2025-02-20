@@ -9,7 +9,6 @@ VERSION="0.5.0"
 
 NEXUS_HOME="$HOME/.nexus"
 NODE_ID_FILE="$NEXUS_HOME/node-id"
-SESSION_NAME="nexus-network"
 ARCH=$(uname -m)
 OS=$(uname -s)
 
@@ -29,9 +28,16 @@ set_node_id() {
     fi
 }
 
+setup_directories() {
+    if [ ! -d "$NEXUS_HOME" ]; then
+        echo -e "${YELLOW}创建 $NEXUS_HOME 目录...${NC}"
+        mkdir -p "$NEXUS_HOME"
+    fi
+
 sudo apt update -y && sudo apt upgrade -y
 sudo apt install -y build-essential pkg-config libssl-dev git-all
 sudo apt install -y protobuf-compiler
+setup_directories
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 export PATH="$HOME/.cargo/bin:$PATH"
 source ~/.bashrc
