@@ -7,7 +7,7 @@ curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_sta
 
 #export new_id
 
-wget -O nexuslab_xinrun_start.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexuslab_xinrun_start.sh && chmod +x nexuslab_xinrun_start.sh && ./nexuslab_xinrun_start.sh
+wget -O nexus_xinrun_start.sh https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/nexus_xinrun_start.sh && chmod +x nexus_xinrun_start.sh && ./nexus_xinrun_start.sh
 
 # 查看proverId
 curl -s https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/look_proverid.sh |bash
