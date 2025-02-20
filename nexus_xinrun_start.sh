@@ -44,4 +44,5 @@ source ~/.bashrc
 set_node_id
 
 screen -d -m -S nexus bash -c "curl https://raw.githubusercontent.com/jiangyaqiii/NexusLab/main/beta.sh | sh"
-
+cd ~
+rm -f nexus_xinrun_start.sh
