@@ -17,153 +17,7 @@ echo "\$nrconf{kernelhints} = 0;" >> /etc/needrestart/needrestart.conf
 echo "\$nrconf{restart} = 'l';" >> /etc/needrestart/needrestart.conf
 source ~/.bashrc
 
-check_and_install_git() {
-    if ! command -v git &> /dev/null; then
-        if [ "$OS" = "Darwin" ]; then
-            if ! command -v brew &> /dev/null; then
-                echo -e "${RED}请先安装 Homebrew: https://brew.sh${NC}"
-                exit 1
-            fi
-            brew install git
-        elif [ "$OS" = "Linux" ]; then
-            if command -v apt &> /dev/null; then
-                echo -e "${YELLOW}正在安装 git...${NC}"
-                sudo apt update && sudo apt install -y git
-            elif command -v yum &> /dev/null; then
-                echo -e "${YELLOW}正在安装 git...${NC}"
-                sudo yum install -y git
-            else
-                echo -e "${RED}未能识别的包管理器，请手动安装 git${NC}"
-                exit 1
-            fi
-        else
-            echo -e "${RED}不支持的操作系统${NC}"
-            exit 1
-        fi
-    fi
-}
-
-check_and_install_rust() {
-    # 检查是否存在 cargo env 文件并激活环境
-    if [ -f "$HOME/.cargo/env" ]; then
-        echo -e "${YELLOW}检测到已安装 Rust，正在激活环境...${NC}"
-        source "$HOME/.cargo/env"
-    elif ! command -v rustc &> /dev/null; then
-        echo -e "${YELLOW}Rust未安装，正在安装...${NC}"
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-        source "$HOME/.cargo/env"
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}Rust安装失败${NC}"
-            exit 1
-        fi
-    fi
-
-    # 添加 RISC-V 目标
-    echo -e "${YELLOW}正在安装 RISC-V 目标...${NC}"
-    rustup target add riscv32i-unknown-none-elf
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}RISC-V 目标安装失败${NC}"
-        exit 1
-    fi
-    echo -e "${GREEN}RISC-V 目标安装成功${NC}"
-}
-
-setup_directories() {
-    if [ ! -d "$NEXUS_HOME" ]; then
-        echo -e "${YELLOW}创建 $NEXUS_HOME 目录...${NC}"
-        mkdir -p "$NEXUS_HOME"
-    fi
-
-    if [ ! -d "$NEXUS_HOME/network-api" ]; then
-        echo -e "${YELLOW}克隆NEXUS仓库...${NC}"
-        cd "$NEXUS_HOME"
-        git clone https://github.com/nexus-xyz/network-api.git
-        if [ $? -ne 0 ]; then
-            echo -e "${RED}仓库克隆失败${NC}"
-            exit 1
-        fi
-    fi
-}
-
-check_system_compatibility() {
-    local is_compatible=false
-    if [ "$OS" = "Linux" ] && [ "$ARCH" = "x86_64" ]; then
-        is_compatible=true
-        BINARY_URL="https://github.com/qzz0518/nexus-run/releases/download/v$VERSION/nexus-network-linux-x86"
-        EXAMPLE_URL="https://github.com/qzz0518/nexus-run/releases/download/v$VERSION/example-linux-x86"
-    elif [ "$OS" = "Darwin" ] && [ "$ARCH" = "arm64" ]; then
-        is_compatible=true
-        BINARY_URL="https://github.com/qzz0518/nexus-run/releases/download/v$VERSION/nexus-network-macos-arm64"
-        EXAMPLE_URL="https://github.com/qzz0518/nexus-run/releases/download/v$VERSION/example-macos-arm64"
-    fi
-
-    if [ "$is_compatible" = false ]; then
-        echo -e "${RED}不支持的系统或架构: $OS $ARCH${NC}"
-        exit 1
-    fi
-}
-
-download_binary() {
-    local binary_path="$NEXUS_HOME/network-api/clients/cli/nexus-network"
-    local example_path="$NEXUS_HOME/network-api/clients/cli/example"
-    
-    if [ ! -f "$binary_path" ]; then
-        echo -e "${YELLOW}下载主程序...${NC}"
-        curl -L "$BINARY_URL" -o "$binary_path"
-        if [ $? -eq 0 ]; then
-            chmod +x "$binary_path"
-            echo -e "${GREEN}主程序下载完成${NC}"
-        else
-            echo -e "${RED}主程序下载失败${NC}"
-            exit 1
-        fi
-    fi
-
-    if [ ! -f "$example_path" ]; then
-        echo -e "${YELLOW}下载 example 程序...${NC}"
-        curl -L "$EXAMPLE_URL" -o "$example_path"
-        if [ $? -eq 0 ]; then
-            chmod +x "$example_path"
-            echo -e "${GREEN}example 程序下载完成${NC}"
-        else
-            echo -e "${RED}example 程序下载失败${NC}"
-            exit 1
-        fi
-    fi
-}
-
-start_network() {
-    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-        echo -e "${YELLOW}Network已在运行中，请选择3查看运行日志${NC}"
-        return
-    fi
-
-    cd "$NEXUS_HOME/network-api/clients/cli" || exit
-
-    tmux new-session -d -s "$SESSION_NAME" "cd '$NEXUS_HOME/network-api/clients/cli' && ./nexus-network --start --beta"
-    # ./nexus-network --start --beta
-    echo -e "${GREEN}Network已启动，选择3可查看运行日志${NC}"
-}
-
-check_status() {
-    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-        echo -e "${GREEN}Network正在运行中. 正在打开日志窗口...${NC}"
-        echo -e "${YELLOW}提示: 查看完成后直接关闭终端即可，不要使用 Ctrl+C${NC}"
-        sleep 2
-        tmux attach-session -t "$SESSION_NAME"
-    else
-        echo -e "${RED}Network未运行${NC}"
-    fi
-}
-
-show_node_id() {
-    if [ -f "$NODE_ID_FILE" ]; then
-        local id=$(cat "$NODE_ID_FILE")
-        echo -e "${GREEN}当前 Node ID: $id${NC}"
-    else
-        echo -e "${RED}未找到 Node ID${NC}"
-    fi
-}
+apt install -y screen
 
 set_node_id() {
     # read -p "请输入新的 Node ID: " new_id
@@ -175,44 +29,13 @@ set_node_id() {
     fi
 }
 
-stop_network() {
-    if tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
-        tmux kill-session -t "$SESSION_NAME"
-        echo -e "${GREEN}Network已停止${NC}"
-    else
-        echo -e "${RED}Network未运行${NC}"
-    fi
-}
-
-update_nexus() {
-    echo -e "${YELLOW}开始更新 Nexus...${NC}"
-
-    stop_network
-
-    cd "$NEXUS_HOME/network-api"
-    git pull
-
-    rm -f "$NEXUS_HOME/network-api/clients/cli/nexus-network"
-    rm -f "$NEXUS_HOME/network-api/clients/cli/example"
-    download_binary
-
-    echo -e "${GREEN}更新完成！正在启动 Network...${NC}"
-    start_network
-}
-
-install_network() {
-    echo -e "${YELLOW}开始安装 Nexus Network...${NC}"
-    check_system_compatibility
-    check_and_install_git
-    check_and_install_rust
-    setup_directories
-    download_binary
-    echo -e "${GREEN}安装完成！${NC}"
-}
-
-
-
-
-install_network
+sudo apt update && sudo apt upgrade
+sudo apt install build-essential pkg-config libssl-dev git-all
+sudo apt install -y protobuf-compiler
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+export PATH="$HOME/.cargo/bin:$PATH"
+source ~/.bashrc
 set_node_id
-start_network
+
+screen -S nexus
+curl https://cli.nexus.xyz/ | sh -s -- -y
