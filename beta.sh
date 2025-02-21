@@ -5,7 +5,12 @@
 #    - First, check if rustc is available. If not, install Rust non-interactively
 #      using the official rustup script.
 # -----------------------------------------------------------------------------
-rustc --version || curl https://sh.rustup.rs -sSf | sh
+
+apt update
+apt install -y build-essential pkg-config libssl-dev git-all
+apt install -y protobuf-compiler
+
+rustc --version || curl https://sh.rustup.rs -sSf | sh  -s -- -y
 
 # -----------------------------------------------------------------------------
 # 2) Define environment variables and colors for terminal output.
@@ -14,6 +19,7 @@ NEXUS_HOME="$HOME/.nexus"
 GREEN='\033[1;32m'
 ORANGE='\033[1;33m'
 NC='\033[0m'  # No Color
+NONINTERACTIVE=1 #
 
 # Ensure the $NEXUS_HOME directory exists.
 [ -d "$NEXUS_HOME" ] || mkdir -p "$NEXUS_HOME"
